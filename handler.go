@@ -186,8 +186,10 @@ func (h *handlerService) register(comp component.Component, opts []component.Opt
 	}
 
 	// register all handlers
+	fmt.Println("注册handler：", s.Name)
 	h.services[s.Name] = s
 	for name, handler := range s.Handlers {
+		fmt.Println("handler==>",fmt.Sprintf("%s.%s", s.Name, name))
 		h.handlers[fmt.Sprintf("%s.%s", s.Name, name)] = handler
 	}
 	return nil
@@ -220,7 +222,7 @@ func (h *handlerService) handle(conn net.Conn) {
 			logger.Println(fmt.Sprintf("Read message error: %s, session will be closed immediately", err.Error()))
 			return
 		}
-
+		//fmt.Println("header==>",buf[0])
 		// TODO(warning): decoder use slice for performance, packet data should be copy before next Decode
 		packets, err := agent.decoder.Decode(buf[:n])
 		if err != nil {
